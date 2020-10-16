@@ -1,8 +1,9 @@
-import datetime
-import django
 from django.db import models
 
-class Person(models.Model):
+from myapp.registry_class import RegisteredModel
+
+
+class Person(models.Model, metaclass=RegisteredModel):
     name = models.CharField(max_length=30)
     email = models.EmailField(unique=True)
     location = models.CharField(max_length=20)
@@ -10,7 +11,11 @@ class Person(models.Model):
     def ____str(self):
         return self.name
 
-class Person_detail(models.Model):
+    class MyPrefixMeta:
+        name = "Person"
+
+
+class Person_detail(models.Model, metaclass=RegisteredModel):
     address = models.CharField(max_length=50)
     person_id = models.ForeignKey(Person, on_delete=models.CASCADE)
     #email = models.ForeignKey(Person, on_delete=models.CASCADE)
@@ -19,4 +24,7 @@ class Person_detail(models.Model):
 
     def ____str(self):
         return self.address
+
+    class MyPrefixMeta:
+        name = "Person_detail"
 
