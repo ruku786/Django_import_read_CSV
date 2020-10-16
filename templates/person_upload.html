@@ -10,7 +10,10 @@
     {% csrf_token %}
     <label>Upload a file</label>
     <input type="file" name="file">
-    <input type="text" name="model">
+    <select name="model">
+          <option value="Person">Person</option>
+          <option value="Person_detail">Person Details</option>
+    </select>
     <button type="submit">Upload</button>
 </form>
 {% endif %}

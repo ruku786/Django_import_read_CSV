@@ -20,7 +20,6 @@ from myapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('upload-csv/', views.person_upload, name="person_upload"),
-    path('upload-csv/', views.person_detail_upload, name="person_detail_upload"),
     #path('', views.person),
     #path('person_detail_upload/', views.person_detail_upload),
     #path('', views.person_detail),
