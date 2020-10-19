@@ -6,7 +6,7 @@ class ModelsRegistryHolder(object):
 
     @classmethod
     def register(cls, job):
-        cls._JOBS_REGISTRY[job.MyPrefixMeta.name] = job
+        cls._JOBS_REGISTRY[job.Meta.name] = job
 
     @classmethod
     def get(cls, job_name):
@@ -26,13 +26,10 @@ class InheritableClassType(type):
 
     def __new__(cls, name, bases, attrs):
         new_cls = type.__new__(cls, name, bases, attrs)
-        job_name = new_cls.MyPrefixMeta.name
-        if not job_name:
-            raise Exception(f"{new_cls.MyPrefixMeta.name} is not configured properly")
+        if not new_cls.__name__ == "BaseCSVClass":
+            job_name = new_cls.Meta.name
+            if not job_name:
+                raise Exception(f"{new_cls.Meta.name} is not configured properly")
 
-        cls._holder.register(new_cls)
+            cls._holder.register(new_cls)
         return new_cls
-
-
-class RegisteredModel(models.base.ModelBase, InheritableClassType):
-    pass

@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 
 from myapp.registry_class import ModelsRegistryHolder
+from myapp.services import add_classes_to_server
 
 '''def person(request):
     template = "person_upload.html"
@@ -56,22 +57,15 @@ def person_upload(request):
     if not csv_file.name.endswith('.csv'):
         messages.error(request, 'This is not csv file')
         return redirect('/upload-csv/')
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
+    add_classes_to_server()
     model = ModelsRegistryHolder().get(request.POST.get('model'))
     if not model:
         messages.error(request, f"Specified model not found {request.POST.get('model')}")
         return redirect('/upload-csv/')
 
-    data_list = [{k: v for k, v in x.items()}
-                 for x in
-                 csv.DictReader(io_string, delimiter=',', quotechar="|", skipinitialspace=True)]
     try:
-        for row in data_list:
-            _, created = model.objects.update_or_create(**row)
-    except FieldError as e:
-        exc = str(e).split('.')[1]
-        messages.error(request,
-                       f"Invalid headers in csv for model {request.POST.get('model')}, {exc}")
+        model.execute(csv_file)
+    except Exception as e:
+        messages.error(request, f"Exception Occured - {e}")
     context = {}
     return render(request, template, context)
