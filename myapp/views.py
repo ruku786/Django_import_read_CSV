@@ -67,5 +67,6 @@ def person_upload(request):
         model.execute(csv_file)
     except Exception as e:
         messages.error(request, f"Exception Occured - {e}")
+        return redirect('/upload-csv/')
     context = {}
     return render(request, template, context)
